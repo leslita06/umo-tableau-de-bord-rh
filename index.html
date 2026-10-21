@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>UMO Intérim · Tableau de bord RH mensuel (exemple fictif)</title>
+<style>
+:root{--encre:#1E1E24;--jaune:#F2B630;--jaune-clair:#FFF6DC;--gris:#6B6B76;--filet:#E4E4EA;--fond:#F6F6F8;--vert:#1E8E5A;--rouge:#C0392B}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Work Sans",Arial,sans-serif;background:var(--fond);color:var(--encre);font-size:16px}
+.fictif{background:#C0392B;color:#fff;text-align:center;padding:10px 16px;font-weight:700;letter-spacing:.02em}
+header{background:#fff;border-bottom:4px solid var(--jaune);padding:22px 32px}
+header .org{font-size:13px;color:var(--gris);text-transform:uppercase;letter-spacing:.06em}
+header h1{margin:6px 0 4px;font-size:30px}
+header p{margin:0;color:var(--gris)}
+main{max-width:1200px;margin:0 auto;padding:24px 20px 48px}
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+select{font-size:16px;padding:8px 12px;border:2px solid var(--jaune);background:var(--jaune-clair);border-radius:6px;font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:16px 18px}
+.card .lab{font-size:14px;color:var(--gris)}
+.card .val{font-size:26px;white-space:nowrap;font-weight:700;margin:6px 0}
+.card .sub{font-size:13px;color:var(--gris)}
+.up{color:var(--rouge);font-weight:700}.down{color:var(--vert);font-weight:700}.eq{color:var(--gris);font-weight:700}
+h2{font-size:20px;margin:30px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--jaune);display:inline-block}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.panel{background:#fff;border:1px solid var(--filet);border-radius:10px;padding:16px 18px}
+.panel h3{margin:0 0 10px;font-size:16px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{background:var(--encre);color:#fff;text-align:left;padding:8px 10px;font-weight:600}
+td{padding:7px 10px;border-bottom:1px solid var(--filet)}
+td.n,th.n{text-align:right;white-space:nowrap}
+tr.tot td{background:var(--jaune-clair);font-weight:700}
+svg text{font-family:"Work Sans",Arial,sans-serif;font-size:11px;fill:#555}
+footer{max-width:1200px;margin:0 auto;padding:0 20px 40px;color:var(--gris);font-size:13px}
+</style>
+</head>
+<body>
+<div class="fictif">EXEMPLE FICTIF · données inventées pour démonstration, aucune donnée réelle d'UMO Intérim ni de ses clients</div>
+<header>
+  <div class="org">UMO Intérim Côte d'Ivoire · Direction des ressources humaines</div>
+  <h1>Tableau de bord RH mensuel</h1>
+  <p>Effectif, mouvements, absentéisme et masse salariale, mois par mois depuis janvier 2026.</p>
+</header>
+<main>
+  <div class="bar"><label for="m"><strong>Mois affiché :</strong></label><select id="m"></select><span style="color:var(--gris)">Les chiffres se comparent au mois précédent ; une hausse de la rotation ou de l'absentéisme s'affiche en rouge.</span></div>
+  <div class="cards" id="cards"></div>
+
+  <h2>Évolution depuis janvier</h2>
+  <div class="grid2">
+    <div class="panel"><h3>L'effectif suit-il l'activité ? Effectif en fin de mois</h3><div id="g1"></div></div>
+    <div class="panel"><h3>Les absences montent-elles ? Taux d'absentéisme</h3><div id="g2"></div></div>
+    <div class="panel"><h3>Combien coûte l'équipe ? Coût total employeur (millions F CFA)</h3><div id="g3"></div></div>
+    <div class="panel"><h3>L'équipe se renouvelle-t-elle trop ? Taux de rotation</h3><div id="g4"></div></div>
+  </div>
+
+  <h2>Détail du mois de septembre 2026</h2>
+  <div class="grid2">
+    <div class="panel"><h3>Sorties par motif</h3><table id="t1"></table></div>
+    <div class="panel"><h3>Absences par motif (jours)</h3><table id="t2"></table></div>
+    <div class="panel"><h3>Masse salariale par composante (millions F CFA)</h3><table id="t3"></table></div>
+  </div>
+
+  <h2>Intérimaires par client et par site · septembre 2026</h2>
+  <div class="panel"><table id="t4"></table></div>
+</main>
+<footer>Sources prévues dans l'outil réel : registre d'employeur et contrats de mission (effectif), relevés de présence des sites clients et certificats (absences), livre de paie du mois (montants). Cette page est une démonstration ; l'outil de travail est le classeur mensuel tenu par la DRH.</footer>
+<script>
+const D={"mois": ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept."], "fin": [186, 194, 202, 210, 218, 226, 234, 242, 250], "interim": [166, 174, 182, 190, 198, 206, 214, 222, 230], "ent": [30, 28, 32, 29, 33, 30, 34, 31, 31], "sor": [22, 20, 24, 21, 25, 22, 26, 23, 23], "rot": [14.3, 12.6, 14.1, 12.1, 13.6, 11.7, 13.0, 11.3, 11.0], "abs": [1.4, 1.3, 1.4, 1.3, 1.3, 1.2, 1.3, 1.3, 1.3], "masse": [35.0, 36.2, 37.5, 38.8, 40.1, 41.5, 43.0, 44.6, 46.5], "cout": [39.6, 40.9, 42.4, 43.8, 45.3, 46.9, 48.6, 50.4, 52.5], "cpp": [217582, 215263, 214141, 212621, 211682, 211261, 211304, 211765, 213415], "sorties": [["Démissions", 2], ["Fins de CDD et de mission", 20], ["Licenciements", 1], ["Autres motifs", 0]], "absences": [["Maladie", 48], ["Accident du travail ou de trajet", 3], ["Absences injustifiées", 12], ["Autres", 5]], "compo": [["Salaires de base : permanents", 9.0], ["Salaires de base : intérimaires", 32.0], ["Heures supplémentaires", 1.5], ["Primes et indemnités", 4.0]], "clients": [["Client A · Agro-industrie", "Yopougon", 62, 8, 6, 19], ["Client B · Logistique portuaire", "Port-Bouët", 48, 7, 5, 14], ["Client C · Distribution", "Cocody", 41, 5, 4, 11], ["Client D · BTP", "Bingerville", 37, 6, 4, 13], ["Client E · Industrie", "San-Pédro", 24, 3, 2, 6], ["Client F · Services", "Plateau", 18, 2, 2, 5]]};
+const fr=n=>n.toLocaleString('fr-FR');
+const sel=document.getElementById('m');
+D.mois.forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m+' 2026';sel.appendChild(o)});
+sel.value=D.mois.length-1;
+function ev(a,b,pct,badUp){if(b===undefined)return '<span class="eq">premier mois</span>';
+ const d=pct?(a-b):((a-b)/b*100);const s=Math.abs(d)<0.05?'=':(d>0?'+':'−');
+ const cls=Math.abs(d)<0.05?'eq':((d>0)===badUp?'up':'down');
+ const txt=pct?(Math.abs(d).toFixed(1).replace('.',',')+' pt'):(Math.abs(d).toFixed(1).replace('.',',')+' %');
+ return `<span class="${cls}">${s==='='?'stable':s+' '+txt}</span> sur le mois précédent`}
+function cards(){const i=+sel.value,p=i-1;const pv=k=>p>=0?D[k][p]:undefined;
+ const C=[["👥 Effectif en fin de mois",fr(D.fin[i]),ev(D.fin[i],pv('fin'),false,null)],
+ ["🧭 dont intérimaires en mission",fr(D.interim[i]),ev(D.interim[i],pv('interim'),false,null)],
+ ["➕ Entrées du mois",fr(D.ent[i]),ev(D.ent[i],pv('ent'),false,null)],
+ ["➖ Sorties du mois",fr(D.sor[i]),ev(D.sor[i],pv('sor'),false,true)],
+ ["🔄 Taux de rotation",D.rot[i].toFixed(1).replace('.',',')+' %',ev(D.rot[i],pv('rot'),true,true)],
+ ["🩺 Taux d'absentéisme",D.abs[i].toFixed(1).replace('.',',')+' %',ev(D.abs[i],pv('abs'),true,true)],
+ ["💰 Masse salariale brute",fr(Math.round(D.masse[i]*1e6))+' F CFA',ev(D.masse[i],pv('masse'),false,null)],
+ ["🏦 Coût total employeur",fr(Math.round(D.cout[i]*1e6))+' F CFA',ev(D.cout[i],pv('cout'),false,null)],
+ ["📊 Coût moyen par personne",fr(D.cpp[i])+' F CFA',ev(D.cpp[i],pv('cpp'),false,null)]];
+ document.getElementById('cards').innerHTML=C.map(c=>`<div class="card"><div class="lab">${c[0]}</div><div class="val">${c[1]}</div><div class="sub">${c[2]}</div></div>`).join('')}
+function chart(id,vals,type,fmt,max,hl){const W=520,H=210,L=40,B=26,T=10,w=W-L-10,h=H-B-T,n=vals.length,step=w/n;
+ let s=`<svg viewBox="0 0 ${W} ${H}" width="100%">`;
+ for(let k=0;k<=4;k++){const y=T+h-h*k/4;s+=`<line x1="${L}" x2="${W-10}" y1="${y}" y2="${y}" stroke="#E4E4EA"/><text x="${L-6}" y="${y+4}" text-anchor="end">${fmt(max*k/4)}</text>`}
+ if(type==='bar'){vals.forEach((v,i)=>{const bh=h*v/max,x=L+i*step+step*.18;s+=`<rect x="${x}" y="${T+h-bh}" width="${step*.64}" height="${bh}" fill="${i==hl?'#F2B630':'#9A9AA6'}" rx="2"/>`})}
+ else{const pts=vals.map((v,i)=>`${L+i*step+step/2},${T+h-h*v/max}`).join(' ');s+=`<polyline points="${pts}" fill="none" stroke="#1E1E24" stroke-width="2.5"/>`;
+  vals.forEach((v,i)=>{s+=`<circle cx="${L+i*step+step/2}" cy="${T+h-h*v/max}" r="${i==hl?5:3}" fill="${i==hl?'#F2B630':'#1E1E24'}"/>`})}
+ D.mois.forEach((m,i)=>{s+=`<text x="${L+i*step+step/2}" y="${H-8}" text-anchor="middle">${m}</text>`});
+ document.getElementById(id).innerHTML=s+'</svg>'}
+function charts(){const i=+sel.value;
+ chart('g1',D.fin,'line',v=>Math.round(v),300,i);
+ chart('g2',D.abs,'bar',v=>v.toFixed(1).replace('.',',')+' %',2,i);
+ chart('g3',D.cout,'bar',v=>Math.round(v),60,i);
+ chart('g4',D.rot,'line',v=>Math.round(v)+' %',16,i)}
+function tab(id,rows,dec){const t=rows.reduce((a,r)=>a+r[1],0);const f=v=>dec?v.toFixed(1).replace('.',','):fr(v);
+ document.getElementById(id).innerHTML=`<tr><th>Motif</th><th class="n">Septembre</th><th class="n">Part</th></tr>`+
+ rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${f(r[1])}</td><td class="n">${Math.round(r[1]/t*100)} %</td></tr>`).join('')+
+ `<tr class="tot"><td>Total</td><td class="n">${f(t)}</td><td class="n">100 %</td></tr>`}
+tab('t1',D.sorties);tab('t2',D.absences);tab('t3',D.compo,true);
+document.getElementById('t4').innerHTML=`<tr><th>Client (entreprise utilisatrice)</th><th>Site</th><th class="n">Intérimaires</th><th class="n">Entrées</th><th class="n">Sorties</th><th class="n">Jours d'absence</th></tr>`+
+ D.clients.map(c=>`<tr><td>${c[0]}</td><td>${c[1]}</td><td class="n">${c[2]}</td><td class="n">${c[3]}</td><td class="n">${c[4]}</td><td class="n">${c[5]}</td></tr>`).join('')+
+ `<tr class="tot"><td>Total</td><td></td><td class="n">${D.clients.reduce((a,c)=>a+c[2],0)}</td><td class="n">${D.clients.reduce((a,c)=>a+c[3],0)}</td><td class="n">${D.clients.reduce((a,c)=>a+c[4],0)}</td><td class="n">${D.clients.reduce((a,c)=>a+c[5],0)}</td></tr>`;
+sel.onchange=()=>{cards();charts()};cards();charts();
+</script>
+</body>
+</html>
